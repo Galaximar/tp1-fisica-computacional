@@ -95,4 +95,4 @@ def findTwinPrimes(n):
 
 print("4_a", "31 es Primo:", isPrime(31))
 print("4_a", "6 es Primo:", isPrime(6))
-print("4_b", "Primeros 100 primos gemelos:", findTwinPrimes(10))
+print("4_b", "Primeros 100 primos gemelos:", findTwinPrimes(100))
