@@ -1,98 +1,93 @@
+import matplotlib.pyplot as plt
+import math as m
+
 # Ejercicio 1
 
 
-original_e = 2.7182818284590
+def getTypeOfTriangle(a, b, c):
+    if a + b <= c or a + c <= b or b + c <= a:
+        return "No es un triángulo válido"
+    if a**2+b**2 == c**2:
+        return 'rectangulo'
+    if a**2+b**2 > c**2:
+        return 'acutangulo'
+    if a**2+b**2 < c**2:
+        return 'obtusangulo'
 
 
-def exp1():
-    n = 50
-    factorial = 1
-    e = 0
-    for i in range(n):
-        factorial *= i or 1
-        e += 1**i/(factorial or 1)
-    return e
-
-
-def exp2():
-    e = 0
-    n = 1
-    # Compruebo con el valor real de e y itero hasta que la diferencia sea menor a 1e-14
-    while abs(e - original_e) > 1e-14:
-        e = (1 + 1 / n) ** n
-        n *= 2
-    return e
-
-
-def denominador(x=2):
-    if x == 300:
-        return 0.9
-    return 1+x-x/denominador(x+1)
-
-
-def exp3():
-    return 1+1/(1-1/denominador())
-
-
-print("1_a", exp1())
-print("1_b", exp2())
-print("1_c", exp3())
+print("Lados 3,4,5:", getTypeOfTriangle(3, 4, 5))
+print("Lados 5,3,5:", getTypeOfTriangle(5, 3, 5))
+print("Lados 8,15,17:", getTypeOfTriangle(8, 15, 17))
 
 # Ejercicio 2
 
 
-def int_to_base3(n):
-    if n == 0:
-        return "0"
+def getTriplasPitagorica(m, n=2):
+    triplas = []
 
-    base3 = ""
-    while n > 0:
-        remainder = n % 3
-        base3 = str(remainder) + base3
-        n //= 3
-    return base3
-
-
-def base3_to_int(base3_num):
-    decimal = 0
-    base3_str = str(base3_num)[::-1]
-
-    for i in range(len(base3_str)):
-        digit = int(base3_str[i])
-        decimal += digit * (3 ** i)
-
-    return decimal
+    def eq(i, j, n):
+        return (i**n+j**n)**(1/n)
+    countOfTriplas = 0
+    for i in range(1, m+1):
+        for j in range(1, m+1):
+            k = eq(i, j, n)
+            if k <= m and int(k) == k:
+                countOfTriplas += 1
+                triplas.append(dict(i=i, j=j, k=eq(i, j, n)))
+    print(f"Cantidad de triplas con exponente {n}: {countOfTriplas}")
+    return triplas
 
 
-print("2_a", "Número en base 10: 170141183460469231731687303715884105728",
-      "Número convertido en base 3:", int_to_base3(170141183460469231731687303715884105728))
-print("2_b", "Número en base 3: 101100201022001010121000102002120122110122221010202000122201220121120010200022002", "Número convertido en base 10:", base3_to_int(
-    101100201022001010121000102002120122110122221010202000122201220121120010200022002))
+getTriplasPitagorica(100, 1)
 
-# Ejercicio 4
+print(f"2_a {getTriplasPitagorica(100, 2)}")
+getTriplasPitagorica(100, 3)
+getTriplasPitagorica(100, 4)
+getTriplasPitagorica(100, 40)
 
-
-def isPrime(num):
-    n = 2
-    while n < num:
-        if num < 4:
-            return True
-        if num % n == 0:
-            return False
-        n += 1
-    return True
+# Ejercicio 3
 
 
-def findTwinPrimes(n):
-    twin_primes = []
-    num = 2
-    while len(twin_primes) < n:
-        if isPrime(num) and isPrime(num + 2):
-            twin_primes.append((num, num + 2))
-        num += 1
-    return twin_primes
+def serie_fourier(x, a, b, N=50):
+    s = a[0]/2
+    for n in range(1, N+1):
+        s += a[n] * m.cos(n*x) + b[n] * m.sin(n*x)
+    return s
 
 
-print("4_a", "31 es Primo:", isPrime(31))
-print("4_a", "6 es Primo:", isPrime(6))
-print("4_b", "Primeros 100 primos gemelos:", findTwinPrimes(100))
+def buildList(cb, N=50):
+    return [cb(i) for i in range(0, N+1)]
+
+
+def b_serrucho(i):
+    return 0 if i == 0 else 2*(-1)**(i+1)/i/m.pi
+
+
+def a_serrucho(i):
+    return 0
+
+
+def f(x):
+    return 2*((x+1/2) - m.floor(x+1/2)) - 1
+
+
+xmin = - 2
+xmax = 2
+nx = 1000
+
+
+def compareFunctions(N=50):
+
+    xs = [xmin + i * (xmax-xmin) / nx for i in range(nx+1)]
+    ys = [serie_fourier(x*2*m.pi, buildList(a_serrucho, N),
+                        buildList(b_serrucho, N), N) for x in xs]
+    yss = [f(x) for x in xs]
+    plt.plot(xs, ys, color='red', label='Serie de fourier')
+    plt.plot(xs, yss, color="blue", label='Función serrucho')
+    plt.title(
+        f"Compración de funciones con {N} iteraciones")
+    plt.legend()
+    plt.show()
+
+
+compareFunctions(6)
