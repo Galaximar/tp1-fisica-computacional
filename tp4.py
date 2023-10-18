@@ -23,6 +23,7 @@ print("Función x**3 evaluada en 2:\nSegunda derivada por definición:",segundaD
 def system(difusividad):
 
     def eq(y, t):
-        return difusividad
+         x, v = y  # Desempaqueta las variables de estado
+         return  [v, x/difusividad ]
     
     return eq

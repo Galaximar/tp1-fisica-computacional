@@ -24,7 +24,7 @@ v0 = 2.0  # Velocidad inicial
 initialValues = [x0, v0]  # Condiciones iniciales como un array
 
 # Tiempo de integración
-t = np.linspace(0, 50, 1000)  # Desde 0 hasta 10 segundos, 1000 puntos
+t = np.linspace(0, 50, 1000)  # Desde 0 hasta 50 segundos, 1000 puntos
 
 solSubCrt = odeint(system(0.1), initialValues, t)
 solCrt=odeint(system(1), initialValues, t)
